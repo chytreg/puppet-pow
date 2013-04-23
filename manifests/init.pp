@@ -13,10 +13,10 @@ class pow {
   }
 
   # Set up firewall
-  exec { "append port to resolver":
-    command => "echo -e '\nport 20560' >> /etc/resolver/dev",
+  exec { "append port to dev resolver":
+    command => "echo '\nport 20559' >> /etc/resolver/dev",
     user    => "root",
-    unless  => "grep -c 20560 /etc/resolver/dev",
+    unless  => "grep -c 20559 /etc/resolver/dev",
     require => Package["pow"]
   }
 

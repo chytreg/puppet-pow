@@ -6,12 +6,16 @@
         <string>cx.pow.powd</string>
         <key>ProgramArguments</key>
         <array>
-                <string>/opt/boxen/homebrew/Cellar/node/0.10.1/bin/node</string>
+                <string>/opt/boxen/nvm/v0.6.20/bin/node</string>
                 <string>/opt/boxen/homebrew/Cellar/pow/0.4.0/libexec/bin/pow</string>
         </array>
         <key>KeepAlive</key>
         <true/>
         <key>RunAtLoad</key>
         <true/>
+        <key>StandardErrorPath</key>
+        <string>/opt/boxen/log/pow.log</string>
+        <key>StandardOutPath</key>
+        <string>/opt/boxen/log/pow.log</string>
 </dict>
 </plist>
