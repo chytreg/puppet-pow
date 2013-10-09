@@ -12,7 +12,6 @@ class pow {
     ensure  => "link",
   }
 
-  # Set up firewall
   exec { "append port to dev resolver":
     command => "echo '\nport 20559' >> /etc/resolver/dev",
     user    => "root",
@@ -20,24 +19,33 @@ class pow {
     require => Package["pow"]
   }
 
-  file { "/Library/LaunchDaemons/cx.pow.firewall.plist":
-    source  => "puppet:///modules/pow/firewall.plist",
-    owner   => "root",
-    group   => "wheel",
+  exec { "append boxen env to .powconfig":
+    command => "echo '\nsource /opt/boxen/env.sh' >> ${home}/.powconfig",
+    user    => "root",
+    unless  => "grep -c /opt/boxen/env.sh ${home}/.powconfig",
     require => Package["pow"]
-  }->
-  exec { "enable firewall launchd":
-    command => "launchctl load -w /Library/LaunchDaemons/cx.pow.firewall.plist",
-    user    => "root"
   }
 
-  # launch at login
-  file { "${home}/Library/LaunchAgents/cx.pow.powd.plist":
-    source  => "puppet:///modules/pow/powd.plist",
-    require => Package["pow"]
-  }->
-  exec { "enable login launchd":
-    command => "launchctl load -w ${home}/Library/LaunchAgents/cx.pow.powd.plist"
+  file { '/Library/LaunchDaemons/dev.pow.firewall.plist':
+    source  => "puppet:///modules/pow/dev.pow.firewall.plist",
+    group   => 'wheel',
+    notify  => Service['dev.pow.firewall'],
+    owner   => 'root'
+  }
+
+  service { 'dev.pow.firewall':
+    ensure  => running,
+    require => Package['pow']
+  }
+
+  file { "${home}/Library/LaunchDaemons/dev.pow.powd.plist":
+    source  => "puppet:///modules/pow/dev.pow.firewall.plist",
+    notify  => Service['dev.pow.powd'],
+  }
+
+  service { 'dev.pow.powd':
+    ensure  => running,
+    require => Package['pow']
   }
 }
 
