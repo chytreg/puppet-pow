@@ -29,23 +29,20 @@ class pow {
   file { '/Library/LaunchDaemons/dev.pow.firewall.plist':
     source  => "puppet:///modules/pow/dev.pow.firewall.plist",
     group   => 'wheel',
-    notify  => Service['dev.pow.firewall'],
-    owner   => 'root'
-  }
-
-  service { 'dev.pow.firewall':
-    ensure  => running,
-    require => Package['pow']
+    owner   => 'root',
+    require => Package["pow"]
+  }->
+  exec { 'dev.pow.firewall':
+    command => "launchctl load -w /Library/LaunchDaemons/dev.pow.firewall.plist",
+    user    => "root"
   }
 
   file { "${home}/Library/LaunchAgents/dev.pow.powd.plist":
     source  => "puppet:///modules/pow/dev.pow.powd.plist",
-    notify  => Service['dev.pow.powd'],
-  }
-
-  service { 'dev.pow.powd':
-    ensure  => running,
     require => Package['pow']
+  }->
+  exec { 'dev.pow.powd':
+    command => "launchctl load -w ${home}/Library/LaunchAgents/dev.pow.powd.plist"
   }
 }
 
