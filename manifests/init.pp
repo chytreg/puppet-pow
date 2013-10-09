@@ -38,8 +38,8 @@ class pow {
     require => Package['pow']
   }
 
-  file { "${home}/Library/LaunchDaemons/dev.pow.powd.plist":
-    source  => "puppet:///modules/pow/dev.pow.firewall.plist",
+  file { "${home}/Library/LaunchAgents/dev.pow.powd.plist":
+    source  => "puppet:///modules/pow/dev.pow.powd.plist",
     notify  => Service['dev.pow.powd'],
   }
 
